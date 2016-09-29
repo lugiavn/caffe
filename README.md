@@ -1,6 +1,9 @@
 # Nam Vo
-hello
+This caffe fork adds some embedding loss layers used in our ECCV 2016 work:
+- Localizing and Orienting Street Views Using Overhead Imagery
+- Nam N. Vo and James Hays
 
+Following is caffe readme
 
 # Caffe
 

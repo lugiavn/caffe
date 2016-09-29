@@ -306,7 +306,8 @@ message ParamSpec {
 // NOTE
 // Update the next available ID when you add a new LayerParameter field.
 //
-// LayerParameter next available layer-specific ID: 147 (last added: recurrent_param)
+// LayerParameter next available layer-specific ID: 149
+// (last added: embedding_dbl_loss_param)
 message LayerParameter {
   optional string name = 1; // the layer name
   optional string type = 2; // the layer type
@@ -403,6 +404,8 @@ message LayerParameter {
   optional ThresholdParameter threshold_param = 128;
   optional TileParameter tile_param = 138;
   optional WindowDataParameter window_data_param = 129;
+  optional ImageDataWithRotationParameter image_data_with_rotation_param = 147;
+  optional EmbeddingDBLLossParameter embedding_dbl_loss_param = 148;
 }
 
 // Message that stores parameters used to apply transformation
@@ -1397,3 +1400,18 @@ message PReLUParameter {
   // Whether or not slope paramters are shared across channels.
   optional bool channel_shared = 2 [default = false];
 }
+message ImageDataWithRotationParameter {
+  optional bool fix_shuffle = 1 [default = false];
+  optional int32 line_start = 2 [default = -1];
+  optional int32 line_end = 3 [default = -1];
+  optional float random_rotation = 4 [default = 0];
+  optional int32 crop_center_size = 5 [default = -1];
+  optional float random_scale = 6 [default = -1];
+  optional bool output_rotation = 7 [default = false];
+  optional bool mine_pairs_with_uniform_class = 8 [default = false];
+}
+
+message EmbeddingDBLLossParameter {
+  optional string description = 1 [default = "triplet_exhausting_dbl"];
+}
+
