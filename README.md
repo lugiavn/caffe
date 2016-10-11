@@ -1,7 +1,16 @@
 # Nam Vo
 This caffe fork adds some embedding loss layers used in our ECCV 2016 work:
-- Localizing and Orienting Street Views Using Overhead Imagery
-- Nam N. Vo and James Hays
+- Localizing and Orienting Street Views Using Overhead Imagery, Nam Vo and James Hays
+
+The plan is to implement some common loss functions for embedding (comparing features):
+- Contrastive loss (Siamese network)
+- Hinge loss for triplet, or ranking loss (ranking/triplet network)
+- Our DBL log loss for pair (Siamese network)
+- Our DBL log loss for triplet (triplet network)
+
+Example mining strategy: exhausting (use every pair/triplet), work in combination with the data layer that will create valid pair of mini-batches.
+
+For now, only exhausting triplet DBL log loss is implemented and verified to work correctly.
 
 Following is caffe readme
 

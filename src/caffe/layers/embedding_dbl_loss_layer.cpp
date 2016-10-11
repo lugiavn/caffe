@@ -364,11 +364,12 @@ void apply_triplet_dbl_grad(float p,
                             const Dtype* nonmatch_feature, Dtype* nonmatch_grad,
                             int channels)
 {
+    float f = 1.0 - p;
     for (int k = 0; k < channels; k++)
     {
-        anchor_grad[k] += (anchor_feature[k] - match_feature[k] - (anchor_feature[k] - nonmatch_feature[k])) * (1 - p);
-        match_grad[k] += (match_feature[k] - anchor_feature[k]) * (1 - p);
-        nonmatch_grad[k] += -(nonmatch_feature[k] - anchor_feature[k]) * (1 - p);
+        anchor_grad[k] += (anchor_feature[k] - match_feature[k] - (anchor_feature[k] - nonmatch_feature[k])) * f;
+        match_grad[k] += (match_feature[k] - anchor_feature[k]) * f;
+        nonmatch_grad[k] += -(nonmatch_feature[k] - anchor_feature[k]) * f;
     }
 }
 

@@ -159,7 +159,7 @@ int feature_extraction_pipeline(int argc, char** argv) {
         CHECK(datum.SerializeToString(&out));
         txns.at(i)->Put(key_str, out);
         ++image_indices[i];
-        if (image_indices[i] % 1000 == 0) {
+        if (image_indices[i] % 10000 == 0) {
           txns.at(i)->Commit();
           txns.at(i).reset(feature_dbs.at(i)->NewTransaction());
           LOG(ERROR)<< "Extracted features of " << image_indices[i] <<

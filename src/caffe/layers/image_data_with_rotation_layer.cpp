@@ -46,7 +46,7 @@ cv::Mat ApplyAdditionalImageTransform(const cv::Mat & cv_img_origin,
       cv_img1 = cv_img_origin;
     else
     {
-	    float angle = (rand() % int(random_rotation)) - random_rotation/2.0;
+        float angle = (rand() % int(random_rotation)) - random_rotation/2.0;
 	    int len = std::max(cv_img_origin.cols, cv_img_origin.rows);
 	    cv::Point2f pt(len/2., len/2.);
 	    cv::Mat r = cv::getRotationMatrix2D(pt, angle, 1.0);
@@ -76,7 +76,7 @@ cv::Mat ApplyAdditionalImageTransform(const cv::Mat & cv_img_origin,
     if (crop_center > 0)
     {
       cv::Rect myROI(cv_img2.cols/2.0 - crop_center/2.0, cv_img2.rows/2.0 - crop_center/2.0, crop_center, crop_center);
-      cv::Mat cv_img3 = cv_img2(myROI);
+      cv_img3 = cv_img2(myROI);
     }
 
     // resize
@@ -163,7 +163,7 @@ void ImageDataWithRotationLayer<Dtype>::DataLayerSetUp(const vector<Blob<Dtype>*
   if (this->layer_param_.image_data_param().shuffle()) {
     // randomly shuffle data
     LOG(INFO) << "Shuffling data";
-    const unsigned int prefetch_rng_seed = fix_shuffle ? 54635 : caffe_rng_rand();
+    const unsigned int prefetch_rng_seed = fix_shuffle ? 39467 : caffe_rng_rand();
     prefetch_rng_.reset(new Caffe::RNG(prefetch_rng_seed));
     ShuffleImages();
   }
@@ -290,18 +290,24 @@ void ImageDataWithRotationLayer<Dtype>::load_batch(Batch<Dtype>* batch) {
 
     // get a blob
     timer.Start();
+    float angle = 0.0/0.0;
     CHECK_GT(lines_size, lines_id_);
     cv::Mat cv_img = ReadImageToCVMat(root_folder + lines_[lines_id_].first,
         0, 0, is_color);
-    CHECK(cv_img.data) << "Could not load " << lines_[lines_id_].first;
-    float angle;
-    cv_img = ApplyAdditionalImageTransform(cv_img, random_rotation, random_scale, crop_center_size, new_width, new_height, &angle);
-    read_time += timer.MicroSeconds();
-    timer.Start();
-    // Apply transformations (mirror, crop...) to the image
-    int offset = batch->data_.offset(item_id);
-    this->transformed_data_.set_cpu_data(prefetch_data + offset);
-    this->data_transformer_->Transform(cv_img, &(this->transformed_data_));
+    //CHECK(cv_img.data) << "Could not load " << lines_[lines_id_].first;
+    if (!cv_img.data) {
+        printf("Error reading image!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+    } else
+    {
+        cv_img = ApplyAdditionalImageTransform(cv_img, random_rotation, random_scale, crop_center_size, new_width, new_height, &angle);
+        read_time += timer.MicroSeconds();
+        timer.Start();
+        // Apply transformations (mirror, crop...) to the image
+        int offset = batch->data_.offset(item_id);
+        this->transformed_data_.set_cpu_data(prefetch_data + offset);
+        this->data_transformer_->Transform(cv_img, &(this->transformed_data_));
+    }
+
     trans_time += timer.MicroSeconds();
 
     if (random_rotation == 0 || !output_rotation)
