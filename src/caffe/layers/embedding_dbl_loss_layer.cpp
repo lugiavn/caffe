@@ -23,7 +23,6 @@ void apply_pair_dbl_grad(float d, float m, int label,
                          const Dtype* a_feature, Dtype* a_grad,
                          const Dtype* b_feature, Dtype* b_grad, int channels, float factor = 1);
 
-
 namespace caffe {
 
 template <typename Dtype>
@@ -231,13 +230,19 @@ void EmbeddingDBLLossLayer<Dtype>::Backward_cpu(const vector<Blob<Dtype>*>& top,
             {
                 // triplet: pairs_i_0, pairs_i_1, pairs_j_1
                 float p = get_triplet_prob(distances_[i][i], distances_[i][j]);
-                apply_triplet_dbl_grad(p, pairs_i_0, grad_pairs_i_0, pairs_i_1, grad_pairs_i_1, pairs_j_1, grad_pairs_j_1, channels);
+
+                apply_triplet_dbl_grad(p, pairs_i_0, grad_pairs_i_0,
+                                       pairs_i_1, grad_pairs_i_1, pairs_j_1, grad_pairs_j_1, channels);
                 example_count++;
+
 
                 // triplet: pairs_i_1, pairs_i_0, pairs_j_0
                 p = get_triplet_prob(distances_[i][i], distances_[j][i]);
-                apply_triplet_dbl_grad(p, pairs_i_1, grad_pairs_i_1, pairs_i_0, grad_pairs_i_0, pairs_j_0, grad_pairs_j_0, channels);
+
+                apply_triplet_dbl_grad(p, pairs_i_1, grad_pairs_i_1,
+                                       pairs_i_0, grad_pairs_i_0, pairs_j_0, grad_pairs_j_0, channels);
                 example_count++;
+
 
             } else
             {
@@ -276,8 +281,11 @@ void EmbeddingDBLLossLayer<Dtype>::Backward_cpu(const vector<Blob<Dtype>*>& top,
                 if (_triplet)
                 {
                     float p = get_triplet_prob(distances_[i][j], distances_[i][k]);
-                    apply_triplet_dbl_grad(p, anchor_feature, anchor_grad, match_feature, match_grad, nonmatch_feature, nonmatch_grad, channels);
+
+                    apply_triplet_dbl_grad(p, anchor_feature, anchor_grad,
+                                           match_feature, match_grad, nonmatch_feature, nonmatch_grad, channels);
                     example_count++;
+
                 } else
                 {
                     apply_pair_dbl_grad(distances_[i][j], 88, 1, anchor_feature, anchor_grad, match_feature, match_grad, channels);
